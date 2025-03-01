@@ -32,8 +32,9 @@ function caja_suscripcion_pagina_configuracion()
         <h1>Configuración de Suscripción</h1>
         <h2 class="nav-tab-wrapper">
             <a href="#tab1" class="nav-tab nav-tab-active" onclick="mostrarPestaña(event, 'tab1')">General</a>
+            <a href="#tab3" class="nav-tab" onclick="mostrarPestaña(event, 'tab3')">Subscriptores</a>
             <a href="#tab2" class="nav-tab" onclick="mostrarPestaña(event, 'tab2')">Avanzado</a>
-            <a href="#tab4" class="nav-tab" onclick="mostrarPestaña(event, 'tab4')">Tabla</a>
+
         </h2>
         <div id="tab1" class="tab-content" style="display: block;">
             <form method="post" action="">
@@ -61,8 +62,31 @@ function caja_suscripcion_pagina_configuracion()
                 <?php submit_button('Guardar CSS', 'primary', 'suscripcion_guardar'); ?>
             </form>
         </div>
-        <div id="tab4" class="tab-content" style="display: none;">
+     <!-- Modal de "Cargando..." -->
+     <div id="loading-modal" style="display: none;">
+                <div class="modal-overlay"></div>
+                <div class="modal-content">
+                    <p>Actualizando datos del grid...</p>
+                </div>
+            </div>
+
+
+        <div id="tab3" class="tab-content" style="display: none;">
             <h2>Usuarios con el rol "Suscriptor"</h2>
+
+           
+            <!-- Barra de herramientas -->
+            <div class="toolbar">
+                <div class="actions">
+                    <button id="refresh-grid" class="button button-primary">Refrescar</button>
+                    <button id="export-csv" class="button">Exportar CSV</button>
+                </div>
+                <div class="search-box">
+                    <input type="text" id="search-input" placeholder="Buscar por nombre..." />
+                    <button id="search-button" class="button">Buscar</button>
+                </div>
+            </div>
+
 
             <!-- Contenedor del grid -->
             <table class="widefat" id="tabla-suscriptores-ajax">

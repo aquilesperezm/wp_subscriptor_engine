@@ -5,8 +5,6 @@ document.addEventListener('DOMContentLoaded', function () {
     form.addEventListener('submit', function (e) {
         e.preventDefault();
 
-            alert('test')
-
         const emailField = document.getElementById('email');
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailField.value)) {
             mensaje.textContent = "Por favor, ingresa un correo válido.";
@@ -14,7 +12,8 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        mensaje.textContent = "¡Registro completado exitosamente!";
+        // Simulación de éxito
+        mensaje.textContent = mensajeExito; // Usar el mensaje pasado desde PHP
         mensaje.style.color = "green";
     });
 });

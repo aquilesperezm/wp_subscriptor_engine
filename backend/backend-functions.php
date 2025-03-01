@@ -23,7 +23,7 @@ function caja_suscripcion_obtener_configuraciones() {
     );
 }
 
-// Endpoint para obtener usuarios suscriptores mediante AJAX
+// Endpoint para obtener usuarios suscriptores con AJAX
 function caja_suscripcion_usuarios_ajax() {
     // Verificar permisos
     if (!current_user_can('manage_options')) {
@@ -33,19 +33,24 @@ function caja_suscripcion_usuarios_ajax() {
 
     // Obtener parámetros de la solicitud
     $pagina_actual = isset($_POST['pagina']) ? absint($_POST['pagina']) : 1;
-    $usuarios_por_pagina = 5; // Número de usuarios por página
+    $usuarios_por_pagina = 10; // Número de usuarios por página
+    $search = isset($_POST['search']) ? sanitize_text_field($_POST['search']) : ''; // Búsqueda
 
-    // Obtener usuarios suscriptores con paginación
+    // Configurar los argumentos de la consulta
     $args = array(
         'role' => 'subscriber',
         'orderby' => 'user_registered',
         'order' => 'DESC',
         'number' => $usuarios_por_pagina,
         'offset' => ($pagina_actual - 1) * $usuarios_por_pagina,
+        'search' => '*' . $search . '*', // Buscar usuarios por nombre (si se especifica)
+        'search_columns' => array('display_name', 'user_email'), // Buscar en nombre y email
     );
+
+    // Obtener los usuarios
     $usuarios = get_users($args);
 
-    // Preparar respuesta
+    // Preparar los datos para la respuesta
     $data = array();
     foreach ($usuarios as $usuario) {
         $data[] = array(
@@ -56,11 +61,11 @@ function caja_suscripcion_usuarios_ajax() {
         );
     }
 
-    // Calcular total de páginas
-    $total_usuarios = count(get_users(array('role' => 'subscriber')));
+    // Calcular el total de usuarios y páginas
+    $total_usuarios = count(get_users(array('role' => 'subscriber', 'search' => '*' . $search . '*', 'search_columns' => array('display_name', 'user_email'))));
     $total_paginas = ceil($total_usuarios / $usuarios_por_pagina);
 
-    // Responder con datos
+    // Enviar la respuesta en formato JSON
     wp_send_json_success(array(
         'usuarios' => $data,
         'total_paginas' => $total_paginas,
